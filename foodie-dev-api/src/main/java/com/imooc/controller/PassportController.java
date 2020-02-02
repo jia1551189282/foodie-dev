@@ -7,15 +7,12 @@ import com.imooc.utils.CookieUtils;
 import com.imooc.utils.IMOOCJSONResult;
 import com.imooc.utils.JsonUtils;
 import com.imooc.utils.MD5Utils;
-import com.sun.deploy.net.HttpResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -73,7 +70,7 @@ public class PassportController {
         return IMOOCJSONResult.ok();
 
     }
-    @ApiOperation(value = "用户登录",notes = "用户登录",httpMethod = "post")
+    @ApiOperation(value = "用户登录",notes = "用户登录",httpMethod = "POST")
     @PostMapping("/login")
     public IMOOCJSONResult login(@RequestBody UserBo userBo, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String username = userBo.getUsername();
@@ -104,6 +101,18 @@ public class PassportController {
         userResult.setUpdatedTime(null);
         userResult.setBirthday(null);
         return userResult;
+    }
+    @ApiOperation(value="用户推出登录" , notes = "用户推出登录",httpMethod = "POST")
+    @PostMapping("/logout")
+    public IMOOCJSONResult logout(HttpServletRequest request,HttpServletResponse response,
+                                  @RequestParam String userId){
+        // 清除用户的相关信息的cookie
+        CookieUtils.deleteCookie(request,response,"user");
+
+        // TODO 用户推出登录 需要清空购物车
+        // TODO 用户在分布式的会话中需要清除用户的数据
+
+        return IMOOCJSONResult.ok();
     }
 
 
